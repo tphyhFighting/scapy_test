@@ -320,6 +320,7 @@ Finished to send 1 packets.
 
 ```
 #####测试rdlen=12
+```python
 >>> dns_server = '8.8.8.8'
 >>> dns_dport = 53
 >>> client_server = "192.168.43.213"
@@ -384,6 +385,7 @@ Sent 1 packets.
          |  rclass= IN
          |  ttl= 64
          |  rdlen= 12
+ ```
   
 2. hhh
 3. hhh
