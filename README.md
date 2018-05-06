@@ -259,5 +259,131 @@ error: 'H' format requires 0 <= number <= 65535
 ```
 
 
+#####测试域名错误
+```python
+>>> ip = ip = IP(dst="8.8.8.8",src="192.168.43.213")
+>>> udp = UDP(sport=RandShort(),dport=53)
+>>> dns_query = DNS(id = 1, qr = 0,opcode = 0,tc = 0,rd = 1,qdcount=1,ancount = 0,nscount=0,arcount=0)
+>>> dns_query.qd = DNSQR(qname = "wx.qx.com",qtype=1,qclass = 1)
+>>> query = ip/udp/dns_query
+>>> query.show()
+###[ IP ]###
+  version= 4
+  ihl= None
+  tos= 0x0
+  len= None
+  id= 1
+  flags=
+  frag= 0
+  ttl= 64
+  proto= udp
+  chksum= None
+  src= 192.168.43.213
+  dst= 8.8.8.8
+  \options\
+###[ UDP ]###
+     sport= <RandShort>
+     dport= domain
+     len= None
+     chksum= None
+###[ DNS ]###
+        id= 1
+        qr= 0
+        opcode= QUERY
+        aa= 0
+        tc= 0
+        rd= 1
+        ra= 0
+        z= 0
+        ad= 0
+        cd= 0
+        rcode= ok
+        qdcount= 1
+        ancount= 0
+        nscount= 0
+        arcount= 0
+        \qd\
+         |###[ DNS Question Record ]###
+         |  qname= 'wx.qx.com'
+         |  qtype= A
+         |  qclass= IN
+        an= None
+        ns= None
+        ar= None
+>>> send(query)
+.
+Sent 1 packets.
+>>> sr1(query)
+Begin emission:
+Finished to send 1 packets.
+...........
+
+```
+#####测试rdlen=12
+>>> dns_server = '8.8.8.8'
+>>> dns_dport = 53
+>>> client_server = "192.168.43.213"
+>>> ip = IP(dst=dns_server,src=client_server)
+>>> udp = UDP(sport=RandShort(),dport=dns_dport)
+>>> dns_query = DNS(id = 1, qr = 0,opcode = 0,tc = 0,rd = 1,qdcount=1,ancount = 0,nscount=0,arcount=1)
+>>> query_type = 1
+>>> dns_query.qd = DNSQR(qname = "www.baidu.com",qtype=query_type,qclass = 1)
+>>> dns_query.ar = DNSRR(rrname="www.baidu.com",type=1,rclass = 1,ttl = 64,rdlen= 12)
+>>> query=ip/udp/dns_query
+>>> send(query)
+.
+Sent 1 packets.
+>>>
+>>> query.show()
+###[ IP ]###
+  version= 4
+  ihl= None
+  tos= 0x0
+  len= None
+  id= 1
+  flags=
+  frag= 0
+  ttl= 64
+  proto= udp
+  chksum= None
+  src= 192.168.43.213
+  dst= 8.8.8.8
+  \options\
+###[ UDP ]###
+     sport= <RandShort>
+     dport= domain
+     len= None
+     chksum= None
+###[ DNS ]###
+        id= 1
+        qr= 0
+        opcode= QUERY
+        aa= 0
+        tc= 0
+        rd= 1
+        ra= 0
+        z= 0
+        ad= 0
+        cd= 0
+        rcode= ok
+        qdcount= 1
+        ancount= 0
+        nscount= 0
+        arcount= 1
+        \qd\
+         |###[ DNS Question Record ]###
+         |  qname= 'www.baidu.com'
+         |  qtype= A
+         |  qclass= IN
+        an= None
+        ns= None
+        \ar\
+         |###[ DNS Resource Record ]###
+         |  rrname= 'www.baidu.com'
+         |  type= A
+         |  rclass= IN
+         |  ttl= 64
+         |  rdlen= 12
+  
 2. hhh
 3. hhh
