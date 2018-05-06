@@ -13,7 +13,7 @@ docker run --rm -it -v `pwd`:/tmp  openswitch/ubuntuscapy sh
 ```python
 dns_server = '8.8.8.8'
 dns_dport = 53
-client_server = "172.20.10.6"
+client_server = "192.168.43.213"
 ```
 #####发一个dns的请求
 ```python
